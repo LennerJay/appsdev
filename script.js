@@ -1,29 +1,47 @@
+let inputEl = document.querySelector("#input-autocomplete");
+let data = ["Red", "Orange", "Blue", "Pink","Rainbow","pinkish","blueshet "];
+autoComplete(inputEl, data);
+
+
 function autoComplete(inputEl, data = []){
     var index = -1;
-    var liSelected;
-    inputEl.addEventListener("keyup", function(e){
-        let li = document.querySelectorAll("li");
-        if(e.which == 40){//arrow down
-            index++;
-            if(liSelected){
-            
+     var liSelected;
+    inputEl.addEventListener("keyup",function(e){
+        const li = document.querySelectorAll("li");
+        let tmp = (li.length - 1 == index) ??  true;
+        if(e.which == 40){//arrowdown
+            if(index < li.length){
+                if(liSelected){
+                    li[index].classList.remove(liSelected);
+                    index++;   
+                    li[index].classList.add(liSelected);
+                }else{
+                    liSelected = "selected"
+                    index++;  
+                    li[index].classList.add(liSelected);
+                }
+                return;
+            }else{
+                index = 0;
+                li[index].classList.add(liSelected);
             }
             return;
-        }
-        else if(e.which == 38){ //arrow up
-            index--;
-            li[index].classList.remove("selected")
-            console.log('arrowUp')
+            
+        }else if(e.which == 38){//arrowup
+            index--
+            li[index].className ="selected";
+           return;
+        }else if(e.which == 13){//enter
+            inputEl.value = li[0].textContent;
+            document.querySelector("#list-autocomplete").remove();
             return;
         }
-     
+        
         let searchedData = data.filter(item => item.toLowerCase().indexOf(inputEl.value.toLowerCase()) >= 0 && inputEl.value != "");
-
-
         if(searchedData.length > 0){
             if(document.querySelector("#list-autocomplete")){
                 document.querySelector("#list-autocomplete").remove();
-            }
+            }  
             
             let ul = document.createElement("UL");
             ul.setAttribute("id", "list-autocomplete");
@@ -32,16 +50,15 @@ function autoComplete(inputEl, data = []){
                 let li = document.createElement("LI");
                 li.textContent = item;
                 ul.appendChild(li);
-                li.addEventListener('click',function(e){
+                li.addEventListener('click',function(){
                     inputEl.value = li.textContent;
                     document.querySelector("#list-autocomplete").remove();
                 })
+
+
             });
-
             insertAfter(ul, inputEl);
-
-            
-           
+    
         }
         else{
             
@@ -50,20 +67,12 @@ function autoComplete(inputEl, data = []){
             }
             
         }
-        
-    });
+
+    })
 
 }
 
-
-let inputEl = document.querySelector("#input-autocomplete");
-let data = ["Red", "Orange", "Blue", "Pink"];
-autoComplete(inputEl, data);
-
-
 function insertAfter(newNode, refNode ){
-
     refNode.parentNode.insertBefore(newNode, refNode.nextSibling);
-
 }
 
