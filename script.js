@@ -8,7 +8,7 @@ function autoComplete(inputEl, data = []){
      var liSelected;
     inputEl.addEventListener("keyup",function(e){
         const li = document.querySelectorAll("li");
-        let tmp = (li.length - 1 == index) ??  true;
+        if(index >= li.length) index =0;
         if(e.which == 40){//arrowdown
             if(index < li.length){
                 if(liSelected){
